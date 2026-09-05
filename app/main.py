@@ -1,6 +1,6 @@
 from fastapi import FastAPI, File, UploadFile, BackgroundTasks
 from database import reset_db, save_file
-from pdf_parser import parse_pdf_and_store_images
+from pipeline import process_document_pipeline
 
 
 app = FastAPI()
@@ -33,7 +33,7 @@ async def upload_files(
   )
 
   background_tasks.add_task(
-        parse_pdf_and_store_images,
+        process_document_pipeline,
         file_id=file_id,
         file_bytes=file_content,
         filename=file.filename
