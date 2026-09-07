@@ -16,11 +16,4 @@ def process_document_pipeline(file_id: int, file_bytes: bytes, filename: str):
 
     embed_chunks(chunks,file_id)
 
-    print(f"Processed {len(chunks)} chunks for file_id: {file_id}")
-
-    return {
-        "status": "success",
-        "file_id": file_id,
-        "chunk_count": len(chunks),
-        "chunks": chunks
-    }
+    print(f"Processed {len(chunks)} chunks for file_id: {file_id} and have embedded")

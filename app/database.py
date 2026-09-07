@@ -34,7 +34,7 @@ ON paper_images(file_id, image_key);
 """
 
 #Function to build connection to database and restart it everytime
-def reset_db():
+def start_db():
     with sqlite3.connect(database) as connection:
         cursor = connection.cursor()
         cursor.execute("DROP TABLE IF EXISTS paper_images")
@@ -95,7 +95,19 @@ def save_image(file_id: int, image_key: str, image_bytes: bytes, caption: str, d
         conn.commit()
         return cursor.lastrowid
 
+def get_file_id():
+    with sqlite3.connect(database) as connection:
+        cursor = connection.cursor()
+        # Correct SQL: Removed trailing comma after 'id', 'FROM' keyword, and extra commas
+        cursor.execute("SELECT id FROM uploaded_files ORDER BY id DESC LIMIT 1;")
+        result = cursor.fetchone()
+
+    if not result:
+        raise ValueError("No files found in the database.")
+
+    return result[0]
+
 
 #Manually allows you to reset the database if you run it directly
 if __name__ == "__main__":
-    reset_db()
+    start_db()

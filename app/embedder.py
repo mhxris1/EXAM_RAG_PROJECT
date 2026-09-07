@@ -6,8 +6,8 @@ import time
 #Create database instance
 chroma_client = chromadb.Client()
 
-batch_size=10
-delay=5
+batch_size=20
+delay=3
 
 #Gemini Embedding function wrapper
 google_ef = embedding_functions.GoogleGeminiEmbeddingFunction(

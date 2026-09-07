@@ -1,5 +1,6 @@
 from fastapi import FastAPI, File, UploadFile, BackgroundTasks
-from database import reset_db, save_file
+from app.flashcards import get_chunks
+from database import get_file_id, save_file, start_db 
 from pipeline import process_document_pipeline
 
 
@@ -8,7 +9,7 @@ app = FastAPI()
 #run reset function when the server is started up
 @app.on_event("startup")
 def startup():
-    reset_db()
+    start_db()
 
 
 @app.get("/")
@@ -16,7 +17,7 @@ def check():
    return{"status": "Server is working"}
 
 
-#REST api to allow users to uplaod file
+#REST api to allow users to upload file
 @app.post("/uploadfiles_test")
 async def upload_files(
    background_tasks: BackgroundTasks,
@@ -47,4 +48,16 @@ async def upload_files(
         "size_bytes": len(file_content)
     }
 
-  
+
+#REST api to make flashcards from file
+@app.post("/makeflashcards_test")
+def make_flashcards():
+   target_id = get_file_id()
+
+   documents = get_chunks(target_id)
+
+   flashcards = generate_flashcards(documents)
+
+
+   
+   
