@@ -1,11 +1,13 @@
 import chromadb
 import chromadb.utils.embedding_functions as embedding_functions
-
+import time
 
 
 #Create database instance
 chroma_client = chromadb.Client()
 
+batch_size=10
+delay=5
 
 #Gemini Embedding function wrapper
 google_ef = embedding_functions.GoogleGeminiEmbeddingFunction(
@@ -54,10 +56,19 @@ def embed_chunks(chunks: list,file_id: int):
         "heading": heading_str # Formatted heading string
         })
 
+    total_chunks = len(chunks)
+    for i in range(0, total_chunks, batch_size):
+        batch_docs = document_text[i:i + batch_size]
+        batch_ids = list_of_ids[i:i + batch_size]
+        batch_metadatas = metadatas[i:i + batch_size]
 
-    collection.add(
-    documents = document_text,
-    ids= list_of_ids,
-    metadatas=metadatas
-    )
+        collection.add(
+            documents=batch_docs,
+            ids=batch_ids,
+            metadatas=batch_metadatas
+        )
+        
+        # Pause briefly to prevent exceeding Gemini's Requests Per Minute (RPM) threshold
+        if i + batch_size < total_chunks:
+            time.sleep(delay)
 
