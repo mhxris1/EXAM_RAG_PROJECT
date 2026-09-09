@@ -1,7 +1,8 @@
 from fastapi import FastAPI, File, UploadFile, BackgroundTasks
-from app.flashcards import get_chunks
+from flashcards import generate_flashcards
 from database import get_file_id, save_file, start_db 
 from pipeline import process_document_pipeline
+
 
 
 app = FastAPI()
@@ -53,10 +54,15 @@ async def upload_files(
 @app.post("/makeflashcards_test")
 def make_flashcards():
    target_id = get_file_id()
+   flashcards = generate_flashcards(target_id)
 
-   documents = get_chunks(target_id)
+   return {
+            "status": "success",
+            "file_id": target_id,
+            "total_cards": len(flashcards),
+            "flashcards": flashcards  # This returns the list of cards directly to the client
+        }
 
-   flashcards = generate_flashcards(documents)
 
 
    

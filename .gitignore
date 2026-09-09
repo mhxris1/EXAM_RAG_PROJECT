@@ -219,3 +219,7 @@ __marimo__/
 
 #sqlite database
 test.db
+
+#vector database
+chroma_db
+

@@ -4,9 +4,10 @@ import time
 
 
 #Create database instance
-chroma_client = chromadb.Client()
+CHROMA_PATH = "/Users/muhxmmadharis/Desktop/Exam_Rag_Project/app/chroma_db"
+chroma_client = chromadb.PersistentClient(path=CHROMA_PATH)
 
-batch_size=20
+batch_size=2
 delay=3
 
 #Gemini Embedding function wrapper
@@ -16,12 +17,6 @@ google_ef = embedding_functions.GoogleGeminiEmbeddingFunction(
 )
 
 def embed_chunks(chunks: list,file_id: int):
-
-    #reset database everytime for testing
-    try:
-        chroma_client.delete_collection(name="Embeddings")
-    except Exception:
-        pass # Collection didn't exist yet, safe to ignore
 
     #Create the schema
     collection = chroma_client.get_or_create_collection(name="Embeddings", embedding_function=google_ef)

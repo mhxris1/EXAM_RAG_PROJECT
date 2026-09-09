@@ -36,11 +36,10 @@ ON paper_images(file_id, image_key);
 #Function to build connection to database and restart it everytime
 def start_db():
     with sqlite3.connect(database) as connection:
-        cursor = connection.cursor()
-        cursor.execute("DROP TABLE IF EXISTS paper_images")
-        cursor.execute("DROP TABLE IF EXISTS uploaded_files")
-        cursor.executescript(create_table)
-        connection.commit()
+        with sqlite3.connect(database) as connection:
+            cursor = connection.cursor()
+            cursor.executescript(create_table)
+            connection.commit()
 
 #Function to save file to the uploaded_file table
 def save_file(filename: str, content_type: str, file_data: bytes):
@@ -81,7 +80,7 @@ def get_filename():
     return result[0]
 
 #Function to save images
-def save_image(file_id: int, image_key: str, image_bytes: bytes, caption: str, db_path: str = "database.db") -> int:
+def save_image(file_id: int, image_key: str, image_bytes: bytes, caption: str) -> int:
     """Inserts an extracted image binary and its caption into paper_images."""
     query = """
     INSERT INTO paper_images (file_id, image_key, image_data, caption)

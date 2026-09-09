@@ -2,6 +2,7 @@ from pdf_parser import parse_pdf_and_store_images
 from chunker import chunk_document
 from embedder import embed_chunks
 
+
 def process_document_pipeline(file_id: int, file_bytes: bytes, filename: str):
     """
     Master pipeline:
@@ -12,8 +13,15 @@ def process_document_pipeline(file_id: int, file_bytes: bytes, filename: str):
     doc = parse_pdf_and_store_images(file_id, file_bytes, filename)
     
     #Generate layout-aware chunks
+
     chunks = chunk_document(doc)
+
+    print(f"Processed {len(chunks)} chunks for file_id: {file_id}")
 
     embed_chunks(chunks,file_id)
 
-    print(f"Processed {len(chunks)} chunks for file_id: {file_id} and have embedded")
+    print("embedding complete")
+    
+
+
+   
