@@ -1,7 +1,7 @@
 from fastapi import FastAPI, File, UploadFile, BackgroundTasks
 from flashcards import generate_flashcards
 from database import get_file_id, save_file, start_db 
-from pipeline import process_document_pipeline
+from rag_pipeline import process_document_pipeline
 
 
 
@@ -63,7 +63,3 @@ def make_flashcards():
             "flashcards": flashcards  # This returns the list of cards directly to the client
         }
 
-
-
-   
-   

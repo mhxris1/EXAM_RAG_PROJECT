@@ -1,8 +1,8 @@
 import os
-import json
 import time
 import chromadb
 import chromadb.utils.embedding_functions as embedding_functions
+from database import save_flashcards
 from google import genai
 from google.genai import types 
 from pydantic import BaseModel, Field
@@ -135,8 +135,17 @@ def generate_flashcards(file_id):
 
     time.sleep(15)
 
-  #Make flashcards list of dictionaries for json
-  return [card.model_dump() for card in flashcards]
+    #Make flashcards list of dictionaries for json
+    flashcard_dicts = [card.model_dump() for card in flashcards]
+
+    save_flashcards(file_id, flashcard_dicts)
+
+  print("flashcards saved")
+
+  return flashcard_dicts
+
+
+
 
 
 

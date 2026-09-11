@@ -27,6 +27,19 @@ CREATE TABLE IF NOT EXISTS paper_images (
     FOREIGN KEY (file_id) REFERENCES uploaded_files(id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS flashcards (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    file_id INTEGER NOT NULL,
+    question TEXT NOT NULL,
+    answer TEXT NOT NULL,
+    section TEXT,
+    page_number INTEGER,
+    
+    FOREIGN KEY (file_id) REFERENCES uploaded_files(id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_flashcards_file_id ON flashcards(file_id);
+
 -- Creates a composite index on file_id and image_key
 -- This allows SQLite to instantly locate a specific image for a file instead of searching line-by-line
 CREATE INDEX IF NOT EXISTS idx_paper_images_lookup 
@@ -105,6 +118,33 @@ def get_file_id():
         raise ValueError("No files found in the database.")
 
     return result[0]
+
+
+def save_flashcards(file_id: int, flashcards_dicts: list[dict]):
+
+    with sqlite3.connect(database) as conn:
+        cursor = conn.cursor()
+        
+        # Prepare data tuples for executemany
+        rows = [
+            (
+                file_id,
+                card["question"],
+                card["answer"],
+                card.get("section"),
+                card.get("page_number")
+            )
+            for card in flashcards_dicts
+        ]
+        
+        cursor.executemany(
+            """
+            INSERT INTO flashcards (file_id, question, answer, section, page_number)
+            VALUES (?, ?, ?, ?, ?)
+            """,
+            rows
+        )
+        conn.commit()
 
 
 #Manually allows you to reset the database if you run it directly
