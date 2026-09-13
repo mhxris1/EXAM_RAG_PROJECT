@@ -38,12 +38,25 @@ CREATE TABLE IF NOT EXISTS flashcards (
     FOREIGN KEY (file_id) REFERENCES uploaded_files(id) ON DELETE CASCADE
 );
 
-CREATE INDEX IF NOT EXISTS idx_flashcards_file_id ON flashcards(file_id);
+CREATE TABLE IF NOT EXISTS chats (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    file_id INTEGER NOT NULL,
+    title TEXT DEFAULT 'New Chat',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (file_id) REFERENCES uploaded_files(id) ON DELETE CASCADE
+);
 
--- Creates a composite index on file_id and image_key
--- This allows SQLite to instantly locate a specific image for a file instead of searching line-by-line
-CREATE INDEX IF NOT EXISTS idx_paper_images_lookup 
-ON paper_images(file_id, image_key);
+-- Stores individual queries and responses associated with a chat session
+CREATE TABLE IF NOT EXISTS chat_messages (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    chat_id INTEGER NOT NULL,
+    sender TEXT NOT NULL CHECK(sender IN ('user', 'assistant', 'system')),
+    content TEXT NOT NULL,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (chat_id) REFERENCES chats(id) ON DELETE CASCADE
+);
 """
 
 #Function to build connection to database and restart it everytime
@@ -145,6 +158,54 @@ def save_flashcards(file_id: int, flashcards_dicts: list[dict]):
             rows
         )
         conn.commit()
+
+def create_chat(file_id: int, title: str = "New Chat") -> int:
+    query = """
+    INSERT INTO chats (file_id, title)
+    VALUES (?, ?)
+    """
+    with sqlite3.connect(database) as connection:
+        connection.execute("PRAGMA foreign_keys = ON;")
+        cursor = connection.cursor()
+        cursor.execute(query, (file_id, title))
+        connection.commit()
+        return cursor.lastrowid
+
+
+# Function to save a message (query or response) to a chat session
+def save_chat_message(chat_id: int, sender: str, content: str) -> int:
+    query = """
+    INSERT INTO chat_messages (chat_id, sender, content)
+    VALUES (?, ?, ?)
+    """
+    with sqlite3.connect(database) as connection:
+        connection.execute("PRAGMA foreign_keys = ON;")
+        cursor = connection.cursor()
+        cursor.execute(query, (chat_id, sender, content))
+        connection.commit()
+        return cursor.lastrowid
+
+
+# Function to fetch recent chat history in chronological order
+def get_chat_history(chat_id: int, limit: int = 5) -> list[dict]:
+    query = """
+    SELECT * FROM (
+        SELECT id, chat_id, sender, content, timestamp 
+        FROM chat_messages 
+        WHERE chat_id = ? 
+        ORDER BY timestamp DESC, id DESC 
+        LIMIT ?
+    ) 
+    ORDER BY timestamp ASC, id ASC;
+    """
+    with sqlite3.connect(database) as connection:
+        connection.row_factory = sqlite3.Row
+        cursor = connection.cursor()
+        cursor.execute(query, (chat_id, limit))
+        rows = cursor.fetchall()
+        
+    return [dict(row) for row in rows]
+
 
 
 #Manually allows you to reset the database if you run it directly

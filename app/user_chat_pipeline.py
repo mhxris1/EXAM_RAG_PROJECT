@@ -11,8 +11,10 @@ chroma_client = chromadb.PersistentClient(path=CHROMA_PATH)
 
 google_ef = embedding_functions.GoogleGeminiEmbeddingFunction(
     model_name="gemini-embedding-001",
-    task_type="RETRIEVAL_DOCUMENT", # Or RETRIEVAL_QUERY for querying
+    task_type="RETRIEVAL_DOCUMENT", 
 )
+
+
 
 
 

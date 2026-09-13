@@ -1,6 +1,8 @@
+from xml.etree.ElementTree import _Target
+
 from fastapi import FastAPI, File, UploadFile, BackgroundTasks
 from flashcards import generate_flashcards
-from database import get_file_id, save_file, start_db 
+from database import get_file_id, save_file, start_db, create_chat, get_chat_history
 from rag_pipeline import process_document_pipeline
 
 
@@ -63,3 +65,10 @@ def make_flashcards():
             "flashcards": flashcards  # This returns the list of cards directly to the client
         }
 
+@app.post("/chat_test")
+async def chat(chat_name: str = "New Chat"):
+    target_id = get_file_id()
+    chat_id = create_chat(target_id, chat_name)
+    
+
+   
