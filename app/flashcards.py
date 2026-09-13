@@ -143,34 +143,3 @@ def generate_flashcards(file_id):
   print("flashcards saved")
 
   return flashcard_dicts
-
-
-
-
-
-
-
-
-
-        
-
-
-
-
-
-
-  
-
-  
-
-
-
-  
-
-
-
-
-
-
-
-

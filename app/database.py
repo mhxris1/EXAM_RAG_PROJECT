@@ -187,10 +187,11 @@ def save_chat_message(chat_id: int, sender: str, content: str) -> int:
 
 
 # Function to fetch recent chat history in chronological order
-def get_chat_history(chat_id: int, limit: int = 5) -> list[dict]:
+def get_chat_history(chat_id: int) -> list[dict]:
+    chat_limit=5
     query = """
-    SELECT * FROM (
-        SELECT id, chat_id, sender, content, timestamp 
+    SELECT sender, content FROM (
+        SELECT sender, content, timestamp, id 
         FROM chat_messages 
         WHERE chat_id = ? 
         ORDER BY timestamp DESC, id DESC 
@@ -201,7 +202,7 @@ def get_chat_history(chat_id: int, limit: int = 5) -> list[dict]:
     with sqlite3.connect(database) as connection:
         connection.row_factory = sqlite3.Row
         cursor = connection.cursor()
-        cursor.execute(query, (chat_id, limit))
+        cursor.execute(query, (chat_id, chat_limit))
         rows = cursor.fetchall()
         
     return [dict(row) for row in rows]

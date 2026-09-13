@@ -21,7 +21,3 @@ def process_document_pipeline(file_id: int, file_bytes: bytes, filename: str):
     embed_chunks(chunks,file_id)
 
     print("embedding complete")
-    
-
-
-   

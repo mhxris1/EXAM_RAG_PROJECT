@@ -66,4 +66,3 @@ def embed_chunks(chunks: list,file_id: int):
         # Pause briefly to prevent exceeding Gemini's Requests Per Minute (RPM) threshold
         if i + batch_size < total_chunks:
             time.sleep(delay)
-

@@ -1,5 +1,3 @@
-from xml.etree.ElementTree import _Target
-
 from fastapi import FastAPI, File, UploadFile, BackgroundTasks
 from flashcards import generate_flashcards
 from database import get_file_id, save_file, start_db, create_chat, get_chat_history
@@ -69,6 +67,3 @@ def make_flashcards():
 async def chat(chat_name: str = "New Chat"):
     target_id = get_file_id()
     chat_id = create_chat(target_id, chat_name)
-    
-
-   
