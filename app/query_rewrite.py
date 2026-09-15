@@ -35,5 +35,3 @@ def rewrite_query(chat_id: int,prompt:str):
     )
 
     return response.text.strip()
-
-    

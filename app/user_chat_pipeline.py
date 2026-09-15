@@ -7,6 +7,7 @@ from google.genai import types
 
 from app.ambiguity_check import is_ambiguous 
 from app.database import save_chat_message
+from app.hyDe import hyDe
 from app.query_rewrite import rewrite_query
 
 
@@ -38,4 +39,5 @@ def chat(chat_id):
             }
 
         else:
+            search=hyDe(rewritten_query)
             
