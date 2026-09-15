@@ -24,7 +24,7 @@ If the answer cannot be found in the context, state: "I cannot find this informa
 
 def chat_response(rewritten_query:str,chunks):
 
-    formatted_chunks = [res["text"] for res in chunks][:5]
+    formatted_chunks= chunks[:5]
     context= "\n".join(formatted_chunks)
 
     final_prompt= f"{CHAT_SYSTEM_PROMPT}\n\n{context}\n\n{rewritten_query}"
@@ -32,7 +32,7 @@ def chat_response(rewritten_query:str,chunks):
     client= genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
     response = client.models.generate_content(
-        model="gemini-3.1-flash-lite",
+        model="gemini-3.5-flash-lite",
         contents = final_prompt,
         config=types.GenerateContentConfig(
                 response_mime_type="application/json",

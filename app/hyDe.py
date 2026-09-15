@@ -24,7 +24,7 @@ def hyDe(rewritten_query:str):
     client= genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
         
     response = client.models.generate_content(
-        model="gemini-2.5-flash-lite",
+        model="gemini-3.5-flash-lite",
         contents = final_prompt,
         config=types.GenerateContentConfig(
             temperature=0.2,

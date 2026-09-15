@@ -2,13 +2,13 @@
 import os
 import time
 
-from app.ambiguity_check import is_ambiguous 
-from app.chat import chat_response
-from app.database import save_chat_message
-from app.hyDe import hyDe
-from app.query_rewrite import rewrite_query
-from app.reranker import dense_rerank
-from app.search import dense_search
+from ambiguity_check import is_ambiguous 
+from chat import chat_response
+from database import save_chat_message
+from hyDe import hyDe
+from query_rewrite import rewrite_query
+from reranker import dense_rerank
+from search import dense_search
 
 
 def chat(chat_id):

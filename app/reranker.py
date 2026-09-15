@@ -1,8 +1,8 @@
 from flashrank import Ranker, RerankRequest
 
-from app.query_rewrite import rewrite_query
+from query_rewrite import rewrite_query
 
-ranker = Ranker(model_name="ms-marco-MiniLM-L-6-v2")
+ranker = Ranker()
 
 def dense_rerank(rewritten_query:str,chunks_retrieved:str):
 

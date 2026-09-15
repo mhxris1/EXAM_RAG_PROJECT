@@ -2,7 +2,7 @@ import os
 
 from google import genai
 from google.genai import types
-from app.database import get_chat_history 
+from database import get_chat_history 
 
 SYSTEM_PROMPT = """
 Act as a precise search query optimizer. 
@@ -26,7 +26,7 @@ def rewrite_query(chat_id: int,prompt:str):
     client= genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
     response = client.models.generate_content(
-        model="gemini-2.5-flash-lite",
+        model="gemini-3.5-flash-lite",
         contents=final_prompt,
         config=types.GenerateContentConfig(
             temperature=0.0,          #Zero randomness stay ont rack with convo

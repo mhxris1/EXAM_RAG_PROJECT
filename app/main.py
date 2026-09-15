@@ -1,5 +1,5 @@
 from fastapi import FastAPI, File, UploadFile, BackgroundTasks
-from app.user_chat_pipeline import chat
+from user_chat_pipeline import chat
 from flashcards import generate_flashcards
 from database import get_file_id, save_file, start_db, create_chat, get_chat_history
 from rag_pipeline import process_document_pipeline
