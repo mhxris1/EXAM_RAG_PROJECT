@@ -14,4 +14,6 @@ def dense_rerank(rewritten_query:str,chunks_retrieved:str):
     #Extract the newly sorted text strings (taking the top 5 best ones)
     final_chunks = [res["text"] for res in reranked_results][:5]
 
+    print("chunks reranked")
+
     return final_chunks

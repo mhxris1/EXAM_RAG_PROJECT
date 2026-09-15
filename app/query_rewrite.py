@@ -21,7 +21,7 @@ def rewrite_query(chat_id: int,prompt:str):
     else:
         formatted_prompt=f"User: {prompt}"
 
-    final_prompt=f"{formatted_prompt}\n{SYSTEM_PROMPT}"
+    final_prompt=f"{SYSTEM_PROMPT}\n{formatted_prompt}"
 
     client= genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
@@ -33,5 +33,6 @@ def rewrite_query(chat_id: int,prompt:str):
             max_output_tokens=100,    #Keep it brief 
         )
     )
+    print("query rewritten")
 
     return response.text.strip()

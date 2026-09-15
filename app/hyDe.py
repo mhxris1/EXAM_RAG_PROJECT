@@ -6,7 +6,7 @@ from typing import Optional
 from pydantic import BaseModel, Field
 
 
-hyDe_SYSTEM_PROMPT ="""
+HYDE_SYSTEM_PROMPT = """
 You are an elite domain expert, technical writer, and master researcher. 
 You possess deep, comprehensive knowledge across a wide range of subjects and write with absolute authority, precision, and clarity.
 
@@ -19,7 +19,7 @@ Output plain text only (no markdown, no preambles). Maximum 150 words.
 
 def hyDe(rewritten_query:str):
 
-    final_prompt = f"{rewritten_query}\n{hyDe_SYSTEM_PROMPT}"
+    final_prompt = f"{HYDE_SYSTEM_PROMPT}\n\n{rewritten_query}"
 
     client= genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
         
@@ -31,5 +31,7 @@ def hyDe(rewritten_query:str):
             max_output_tokens=200
             )
     )
+
+    print("hyDe response generated")
     return response.text.strip()
     
