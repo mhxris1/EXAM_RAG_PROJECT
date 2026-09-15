@@ -1,7 +1,6 @@
+import collections
 import os
 import time
-import chromadb
-import chromadb.utils.embedding_functions as embedding_functions
 from google import genai
 from google.genai import types
 
@@ -9,17 +8,9 @@ from app.ambiguity_check import is_ambiguous
 from app.database import save_chat_message
 from app.hyDe import hyDe
 from app.query_rewrite import rewrite_query
+from app.reranker import dense_rerank
+from app.search import dense_search
 
-
-
-#Use the same database initialised in embedder module
-CHROMA_PATH = "/Users/muhxmmadharis/Desktop/Exam_Rag_Project/app/chroma_db"
-chroma_client = chromadb.PersistentClient(path=CHROMA_PATH)
-
-google_ef = embedding_functions.GoogleGeminiEmbeddingFunction(
-    model_name="gemini-embedding-001",
-    task_type="RETRIEVAL_DOCUMENT", 
-)
 
 def chat(chat_id):
 
@@ -39,5 +30,15 @@ def chat(chat_id):
             }
 
         else:
-            search=hyDe(rewritten_query)
+            search = hyDe(rewritten_query)
+            chunks_retrieved=dense_search(search)
+            reranked_chunks=dense_rerank(rewritten_query,chunks_retrieved)
+            
+            
+
+
+
+
+
+
             
