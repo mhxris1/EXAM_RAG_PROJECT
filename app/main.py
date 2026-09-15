@@ -63,7 +63,9 @@ def make_flashcards():
             "flashcards": flashcards  # This returns the list of cards directly to the client
         }
 
-@app.post("/chat_test")
+@app.post("/create_chat_test")
 async def chat(chat_name: str = "New Chat"):
     target_id = get_file_id()
     chat_id = create_chat(target_id, chat_name)
+
+@app.post("/chat/{chat_id}")

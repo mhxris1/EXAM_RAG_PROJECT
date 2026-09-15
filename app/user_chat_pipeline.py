@@ -5,6 +5,8 @@ import chromadb.utils.embedding_functions as embedding_functions
 from google import genai
 from google.genai import types
 
+from app.ambiguity_check import is_ambiguous 
+from app.database import save_chat_message
 from app.query_rewrite import rewrite_query
 
 
@@ -22,15 +24,18 @@ def chat(chat_id):
 
     while True:
         prompt = input("")
+        save_chat_message(chat_id,"user",prompt)
         rewritten_query=rewrite_query(chat_id,prompt)
-        
+        ambiguity=is_ambiguous(rewritten_query)
 
-        
+        if ambiguity.is_ambiguous:
+            question = ambiguity.clarifying_question
+            save_chat_message(chat_id,"system",question)
+            return {
+            "response": question,
+            "requires_clarification": True,
+            "chat_id": chat_id
+            }
+
+        else:
             
-
-
-
-
-
-
-
